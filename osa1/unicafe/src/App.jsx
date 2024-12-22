@@ -21,6 +21,8 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const all = () => good + neutral + bad;
+
   return (
     <div>
       <h1>give feeback</h1>
@@ -31,6 +33,9 @@ const App = () => {
       <Stat label="good" value={good} />
       <Stat label="neutral" value={neutral} />
       <Stat label="bad" value={bad} />
+      <Stat label="all" value={all()} />
+      <Stat label="average" value={(good - bad) / all() || 0} />
+      <Stat label="positive" value={(good * 100) / (all() || 1) + " %"} />
     </div>
   );
 };
