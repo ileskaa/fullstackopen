@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-const Button = (props) => {
+const Button = ({ label, value, setValue }) => {
   const handleClick = () => {
-    props.setValue(props.value + 1);
+    setValue(value + 1);
   };
-  return <button onClick={handleClick}>{props.label}</button>;
+  return <button onClick={handleClick}>{label}</button>;
 };
 
 const Stat = (props) => {
@@ -15,20 +15,11 @@ const Stat = (props) => {
   );
 };
 
-const App = () => {
-  // tallenna napit omaan tilaansa
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-
+const Statistics = ({ good, neutral, bad }) => {
   const all = () => good + neutral + bad;
 
   return (
     <div>
-      <h1>give feeback</h1>
-      <Button label="good" value={good} setValue={setGood} />
-      <Button label="neutral" value={neutral} setValue={setNeutral} />
-      <Button label="bad" value={bad} setValue={setBad} />
       <h1>statistics</h1>
       <Stat label="good" value={good} />
       <Stat label="neutral" value={neutral} />
@@ -36,6 +27,24 @@ const App = () => {
       <Stat label="all" value={all()} />
       <Stat label="average" value={(good - bad) / all() || 0} />
       <Stat label="positive" value={(good * 100) / (all() || 1) + " %"} />
+    </div>
+  );
+};
+
+const App = () => {
+  // tallenna napit omaan tilaansa
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div>
+      <h1>give feeback</h1>
+      <Button label="good" value={good} setValue={setGood} />
+      <Button label="neutral" value={neutral} setValue={setNeutral} />
+      <Button label="bad" value={bad} setValue={setBad} />
+
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
