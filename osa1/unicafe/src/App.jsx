@@ -9,9 +9,10 @@ const Button = ({ label, value, setValue }) => {
 
 const StatisticLine = ({ label, value }) => {
   return (
-    <div>
-      {label} {value}
-    </div>
+    <tr>
+      <td>{label}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
@@ -26,14 +27,16 @@ const Statistics = ({ good, neutral, bad }) => {
     );
 
   return (
-    <div>
-      <StatisticLine label="good" value={good} />
-      <StatisticLine label="neutral" value={neutral} />
-      <StatisticLine label="bad" value={bad} />
-      <StatisticLine label="all" value={all()} />
-      <StatisticLine label="average" value={(good - bad) / all()} />
-      <StatisticLine label="positive" value={(good * 100) / all() + " %"} />
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine label="good" value={good} />
+        <StatisticLine label="neutral" value={neutral} />
+        <StatisticLine label="bad" value={bad} />
+        <StatisticLine label="all" value={all()} />
+        <StatisticLine label="average" value={(good - bad) / all()} />
+        <StatisticLine label="positive" value={(good * 100) / all() + " %"} />
+      </tbody>
+    </table>
   );
 };
 
