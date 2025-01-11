@@ -25,9 +25,16 @@ const App = () => {
       return;
     }
 
-    const personObj = { name: newName, number: newNumber };
+    const personObj = {
+      id: persons.length + 1,
+      name: newName,
+      number: newNumber,
+    };
 
-    setPersons(persons.concat(personObj));
+    axios.post("http://localhost:3001/persons", personObj).then((response) => {
+      setPersons(persons.concat(response.data));
+    });
+
     setNewName("");
     setNewNumber("");
   };
