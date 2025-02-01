@@ -16,12 +16,36 @@ const App = () => {
     // Suoritetaan efekti vain ensimmäisen renderöinnin jälkeen
   }, []);
 
+  const replacementConfirmation = () =>
+    window.confirm(
+      `${newName} is already added to phonebook, replace the old number with a new one?`
+    );
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  const updateNumber = (id) => {
+    const updatedPerson = {
+      name: newName,
+      number: newNumber,
+      id,
+    };
+    return personService.update(id, updatedPerson);
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
-
     const found = persons.find((person) => person.name === newName);
     if (found) {
-      alert(`${newName} is already added to phonebook`);
+      if (replacementConfirmation()) {
+        updateNumber(found.id).then((response) => {
+          const updatedPersons = persons.map((person) =>
+            person.id === found.id ? response.data : person
+          );
+          setPersons(updatedPersons);
+        });
+      }
       return;
     }
 
@@ -41,10 +65,6 @@ const App = () => {
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
-  };
-
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
   };
 
   const [filter, setNewFilter] = useState("");
