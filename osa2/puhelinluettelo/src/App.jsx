@@ -26,9 +26,9 @@ const App = () => {
     }
 
     const personObj = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
+      id: "" + (persons.length + 1),
     };
 
     personService.create(personObj).then((response) => {
@@ -57,6 +57,12 @@ const App = () => {
     setNewFilter(event.target.value);
   };
 
+  const removePerson = (id) => {
+    personService
+      .del(id)
+      .then(setPersons(persons.filter((person) => person.id !== id)));
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -70,7 +76,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} removePerson={removePerson} />
     </div>
   );
 };
