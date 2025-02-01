@@ -9,7 +9,8 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [errorMessage, setMessage] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -40,6 +41,7 @@ const App = () => {
     setMessage(msg);
     setTimeout(() => {
       setMessage(null);
+      setError(false);
     }, 3000);
   };
 
@@ -48,13 +50,20 @@ const App = () => {
     const found = persons.find((person) => person.name === newName);
     if (found) {
       if (replacementConfirmation()) {
-        updateNumber(found.id).then((response) => {
-          const updatedPersons = persons.map((person) =>
-            person.id === found.id ? response.data : person
-          );
-          setPersons(updatedPersons);
-          showTemporaryMessage(`Updated the number of ${found.name}`);
-        });
+        updateNumber(found.id)
+          .then((response) => {
+            const updatedPersons = persons.map((person) =>
+              person.id === found.id ? response.data : person
+            );
+            setPersons(updatedPersons);
+            showTemporaryMessage(`Updated the number of ${found.name}`);
+          })
+          .catch(() => {
+            setError(true);
+            showTemporaryMessage(
+              `Information of ${found.name} has already been removed from the server`
+            );
+          });
       }
       return;
     }
@@ -91,16 +100,16 @@ const App = () => {
 
   const removePerson = (id) => {
     const match = persons.find((person) => person.id === id);
-    personService
-      .del(id)
-      .then(setPersons(persons.filter((person) => person.id !== id)));
-    showTemporaryMessage(`Removed ${match.name}`);
+    personService.del(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
+      showTemporaryMessage(`Removed ${match.name}`);
+    });
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={message} error={error} />
       <Filter filter={filter} filterPersons={filterPersons} />
       <h2>add a new</h2>
       <PersonForm
