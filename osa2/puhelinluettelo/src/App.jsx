@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./services/persons";
@@ -8,6 +9,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [errorMessage, setMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -34,6 +36,13 @@ const App = () => {
     return personService.update(id, updatedPerson);
   };
 
+  const showTemporaryMessage = (msg) => {
+    setMessage(msg);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
     const found = persons.find((person) => person.name === newName);
@@ -44,6 +53,7 @@ const App = () => {
             person.id === found.id ? response.data : person
           );
           setPersons(updatedPersons);
+          showTemporaryMessage(`Updated the number of ${found.name}`);
         });
       }
       return;
@@ -58,6 +68,8 @@ const App = () => {
     personService.create(personObj).then((response) => {
       setPersons(persons.concat(response.data));
     });
+
+    showTemporaryMessage(`Added ${newName}`);
 
     setNewName("");
     setNewNumber("");
@@ -78,14 +90,17 @@ const App = () => {
   };
 
   const removePerson = (id) => {
+    const match = persons.find((person) => person.id === id);
     personService
       .del(id)
       .then(setPersons(persons.filter((person) => person.id !== id)));
+    showTemporaryMessage(`Removed ${match.name}`);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter filter={filter} filterPersons={filterPersons} />
       <h2>add a new</h2>
       <PersonForm
