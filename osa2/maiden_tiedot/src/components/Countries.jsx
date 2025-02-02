@@ -1,6 +1,6 @@
 import Languages from "./Languages";
 
-const Countries = ({ show, countriesToShow }) => {
+const Countries = ({ show, countriesToShow, setCountriesToShow }) => {
   if (show === false) return null;
 
   if (countriesToShow.length === 1) {
@@ -23,7 +23,12 @@ const Countries = ({ show, countriesToShow }) => {
 
   return countriesToShow.map((country) => {
     const countryName = country.name.common;
-    return <div key={countryName}>{countryName}</div>;
+    return (
+      <div key={countryName}>
+        {countryName}{" "}
+        <button onClick={() => setCountriesToShow([country])}>show</button>
+      </div>
+    );
   });
 };
 

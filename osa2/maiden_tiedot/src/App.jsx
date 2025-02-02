@@ -26,6 +26,7 @@ function App() {
       <Countries
         show={countriesToShow.length !== countries.length}
         countriesToShow={countriesToShow}
+        setCountriesToShow={setCountriesToShow}
       />
     </div>
   );
