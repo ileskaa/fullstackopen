@@ -1,21 +1,12 @@
-import Languages from "./Languages";
+import CountryDetails from "./CountryDetails";
 
 const Countries = ({ show, countriesToShow, setCountriesToShow }) => {
+  const country = countriesToShow[0];
+
   if (show === false) return null;
 
   if (countriesToShow.length === 1) {
-    const country = countriesToShow[0];
-    return (
-      <div>
-        <h2>{country.name.common}</h2>
-        <div>capital {country.capital[0]}</div>
-        <div>area {country.area}</div>
-
-        <h3>languages:</h3>
-        <Languages languages={country.languages} />
-        <img src={country.flags.svg} width="180" />
-      </div>
-    );
+    return <CountryDetails country={country} />;
   }
 
   if (countriesToShow.length > 10)
