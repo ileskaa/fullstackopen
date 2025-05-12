@@ -5,7 +5,16 @@ const app = express();
 
 app.use(express.json());
 // morgan middleware käyttöön
-app.use(morgan("tiny"));
+morgan.token("post", function (req, res) {
+  if (req.method === "POST") {
+    const body = JSON.stringify(req.body);
+    return body;
+  }
+  return " ";
+});
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :post")
+);
 
 let persons = [
   {
